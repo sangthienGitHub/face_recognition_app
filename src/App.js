@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Particles from "react-particles-js";
 import Clarifai from "clarifai";
 import Navigation from "./components/Navigation/Navigation";
+import Register from "./components/Register/Register";
 import Signin from "./components/Signin/Signin";
 import Logo from "./components/Logo/Logo";
 import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
@@ -32,6 +33,7 @@ class App extends Component {
       imageUrl: "",
       box: {},
       route: "signin",
+      isSignedIn: false,
     };
   }
 
@@ -70,16 +72,22 @@ class App extends Component {
   };
 
   onRouteChange = (route) => {
+    if (route === "signout") {
+      this.setState({ isSignedIn: false });
+    } else if (route === "home") {
+      this.setState({ isSignedIn: true });
+    }
     this.setState({ route: route });
   };
   render() {
     return (
       <div className='App'>
         <Particles className='particles' params={particalOptions} />
-        <Navigation onRouteChange={this.onRouteChange} />
-        {this.state.route === "signin" ? (
-          <Signin onRouteChange={this.onRouteChange} />
-        ) : (
+        <Navigation
+          isSignedIn={this.state.isSignedIn}
+          onRouteChange={this.onRouteChange}
+        />
+        {this.state.route === "home" ? (
           <div>
             {" "}
             <Logo />
@@ -93,6 +101,10 @@ class App extends Component {
               imageUrl={this.state.imageUrl}
             />
           </div>
+        ) : this.state.route === "signin" ? (
+          <Signin onRouteChange={this.onRouteChange} />
+        ) : (
+          <Register onRouteChange={this.onRouteChange} />
         )}
       </div>
     );
