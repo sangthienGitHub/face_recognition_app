@@ -25,23 +25,25 @@ const particalOptions = {
     },
   },
 };
+
+const intialState = {
+  input: "",
+  imageUrl: "",
+  box: {},
+  route: "signin",
+  isSignedIn: false,
+  user: {
+    id: "",
+    name: "",
+    email: "",
+    entries: 0,
+    joined: "",
+  },
+};
 class App extends Component {
   constructor() {
     super();
-    this.state = {
-      input: "",
-      imageUrl: "",
-      box: {},
-      route: "signin",
-      isSignedIn: false,
-      user: {
-        id: "",
-        name: "",
-        email: "",
-        entries: 0,
-        joined: "",
-      },
-    };
+    this.state = intialState;
   }
 
   loadUser = (data) => {
@@ -55,13 +57,6 @@ class App extends Component {
       },
     });
   };
-
-  //Test backend server
-  // componentDidMount() {
-  //   fetch("http://localhost:3000/").then((response) =>
-  //     response.json().then(console.log)
-  //   );
-  // }
 
   calculateFaceLocation = (data) => {
     const clarifiFace =
@@ -102,7 +97,8 @@ class App extends Component {
             .then((response) => response.json())
             .then((count) => {
               this.setState(Object.assign(this.state.user, { entries: count }));
-            });
+            })
+            .catch((err) => console.log(err));
         }
         this.displayFaceBox(this.calculateFaceLocation(response));
       })
@@ -111,7 +107,7 @@ class App extends Component {
 
   onRouteChange = (route) => {
     if (route === "signout") {
-      this.setState({ isSignedIn: false });
+      this.setState(intialState);
     } else if (route === "home") {
       this.setState({ isSignedIn: true });
     }
